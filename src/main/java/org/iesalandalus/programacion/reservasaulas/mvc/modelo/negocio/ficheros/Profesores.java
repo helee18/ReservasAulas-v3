@@ -22,7 +22,7 @@ import org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.IProfesore
 public class Profesores implements IProfesores {
 	
 	private List<Profesor> coleccionProfesores;
-	private static final String NOMBRE_FICHERO_PROFESORES = ".\\Profesores.dat";
+	private static final String NOMBRE_FICHERO_PROFESORES = ".\\src\\main\\java\\org\\iesalandalus\\programacion\\reservasaulas\\mvc\\modelo\\negocio\\ficheros\\Ficheros\\Profesores.dat";
 	
 	public Profesores () {
 		coleccionProfesores = new ArrayList<Profesor>();
@@ -64,9 +64,9 @@ public class Profesores implements IProfesores {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+			System.out.println("ERROR: No puedo abrir el fichero de profesores.");
 		} catch (EOFException e) {
-			System.out.println("Fichero aulas leído.");
+			System.out.println("Fichero profesores leído.");
 		} catch (IOException e) {
 			System.out.println("ERROR inesperado de Entrada/Salida.");
 		} catch (OperationNotSupportedException e) {
@@ -84,11 +84,11 @@ public class Profesores implements IProfesores {
 			
 			for (Profesor profesor : coleccionProfesores)
 				objectOS.writeObject(profesor);
-			System.out.println("Fichero aulas escrito.");
+			System.out.println("Fichero profesores escrito.");
 			
 			objectOS.close();//cerramos flujo
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+			System.out.println("ERROR: No puedo abrir el fichero de profesores.");
 		} catch (IOException e) {
 			System.out.println("ERROR inesperado de Entrada/Salida.");
 		}

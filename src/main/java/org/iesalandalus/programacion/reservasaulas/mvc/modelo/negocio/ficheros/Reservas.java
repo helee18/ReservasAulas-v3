@@ -30,7 +30,7 @@ public class Reservas implements IReservas {
 	private static final float MAX_PUNTOS_PROFESOR_MES = 200;
 
 	private List<Reserva> coleccionReservas;
-	private static final String NOMBRE_FICHERO_RESERVAS = ".\\Reservas.dat";
+	private static final String NOMBRE_FICHERO_RESERVAS = ".\\src\\main\\java\\org\\iesalandalus\\programacion\\reservasaulas\\mvc\\modelo\\negocio\\ficheros\\Ficheros\\Reservas.dat";
 	
 	public Reservas () {
 		coleccionReservas = new ArrayList<Reserva>();
@@ -72,9 +72,9 @@ public class Reservas implements IReservas {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+			System.out.println("ERROR: No puedo abrir el fichero de reservas.");
 		} catch (EOFException e) {
-			System.out.println("Fichero aulas leído.");
+			System.out.println("Fichero reservas leído.");
 		} catch (IOException e) {
 			System.out.println("ERROR inesperado de Entrada/Salida.");
 		} catch (OperationNotSupportedException e) {
@@ -92,11 +92,11 @@ public class Reservas implements IReservas {
 	        
 			for (Reserva reserva : coleccionReservas)
 				objectOS.writeObject(reserva);
-			System.out.println("Fichero aulas escrito.");
+			System.out.println("Fichero reservas escrito.");
 
 			objectOS.close();//cerramos flujo
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+			System.out.println("ERROR: No puedo abrir el fichero de reservas.");
 		} catch (IOException e) {
 			System.out.println("ERROR inesperado de Entrada/Salida.");
 		}
