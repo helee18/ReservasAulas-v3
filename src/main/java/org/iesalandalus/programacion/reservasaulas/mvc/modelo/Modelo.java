@@ -27,6 +27,20 @@ public class Modelo implements IModelo {
 		reservas = fuente.crearReservas();		
 	}
 	
+	@Override
+	public void comenzar() {
+		aulas.comenzar();
+		profesores.comenzar();
+		reservas.comenzar();
+	}
+
+	@Override
+	public void terminar() {
+		aulas.terminar();
+		profesores.terminar();
+		reservas.terminar();
+	}
+	
 	// Metodos clase aulas
 	
 	@Override
