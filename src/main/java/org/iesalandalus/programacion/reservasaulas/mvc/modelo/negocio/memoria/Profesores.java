@@ -116,6 +116,18 @@ public class Profesores implements IProfesores {
 	public int getNumProfesores() {
 		return coleccionProfesores.size();
 	}
+
+	@Override
+	public void comenzar() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void terminar() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

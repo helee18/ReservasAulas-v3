@@ -116,6 +116,18 @@ public class Aulas implements IAulas {
 	public int getNumAulas() {
 		return coleccionAulas.size();
 	}
+
+	@Override
+	public void comenzar() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void terminar() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }
