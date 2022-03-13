@@ -57,13 +57,18 @@ public class Reservas implements IReservas {
 	private void leer(){
 		File fileReservas = new File(NOMBRE_FICHERO_RESERVAS); // creamos el fichero
 		
-		try (ObjectInputStream fileIS = new ObjectInputStream(new FileInputStream(fileReservas))) { // creamos el flujo y recorremos las reservas para ir copiandolas del fichero
+		// creamos el flujo y recorremos las reservas para ir copiandolas del fichero
+		try { 
+			FileInputStream fileIS = new FileInputStream(fileReservas);// creamos el flujo
+	        ObjectInputStream objectIS = new ObjectInputStream(fileIS);// definimos que el tipo de dato va a ser objeto
 			Reserva reserva = null;
 			do {
-				reserva = (Reserva) fileIS.readObject();
+				reserva = (Reserva) objectIS.readObject();
 				insertar(reserva);
 
 			} while (reserva != null);
+			
+			objectIS.close(); //cerramos flujo
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
 		} catch (FileNotFoundException e) {
@@ -78,13 +83,18 @@ public class Reservas implements IReservas {
 	}
 	
 	private void escribir(){
-		File fileProfesores = new File(NOMBRE_FICHERO_RESERVAS); // creamos el fichero
+		File fileReservas = new File(NOMBRE_FICHERO_RESERVAS); // creamos el fichero
 		
-		try (ObjectOutputStream fileOS = new ObjectOutputStream(new FileOutputStream(fileProfesores))) {// creamos el flujo y recorremos las reservas para ir copiandolas en el fichero
+		// creamos el flujo y recorremos las reservas para ir copiandolas en el fichero
+		try {
+			FileOutputStream fileOS = new FileOutputStream(fileReservas); // creamos el flujo
+	        ObjectOutputStream objectOS = new ObjectOutputStream(fileOS);  // definimos que el tipo de dato va a ser objeto
+	        
 			for (Reserva reserva : coleccionReservas)
-				fileOS.writeObject(reserva);
+				objectOS.writeObject(reserva);
 			System.out.println("Fichero aulas escrito.");
 
+			objectOS.close();//cerramos flujo
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
 		} catch (IOException e) {

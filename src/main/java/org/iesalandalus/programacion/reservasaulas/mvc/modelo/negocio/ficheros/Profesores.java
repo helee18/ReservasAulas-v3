@@ -16,7 +16,6 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.iesalandalus.programacion.reservasaulas.mvc.modelo.dominio.Aula;
 import org.iesalandalus.programacion.reservasaulas.mvc.modelo.dominio.Profesor;
 import org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.IProfesores;
 
@@ -50,13 +49,18 @@ public class Profesores implements IProfesores {
 	private void leer(){
 		File fileProfesores = new File(NOMBRE_FICHERO_PROFESORES); // creamos el fichero
 		
-		try (ObjectInputStream fileIS = new ObjectInputStream(new FileInputStream(fileProfesores))) { // creamos el flujo y recorremos los profesores para ir copiandolas del fichero
+		// creamos el flujo y recorremos los profesores para ir copiandolas del fichero
+		try { 
+			FileInputStream fileIS = new FileInputStream(fileProfesores);// creamos el flujo
+			ObjectInputStream objectIS = new ObjectInputStream(fileIS);// definimos que el tipo de dato va a ser objeto
 			Profesor profesor = null;
 			do {
-				profesor = (Profesor) fileIS.readObject();
+				profesor = (Profesor) objectIS.readObject();
 				insertar(profesor);
 
 			} while (profesor != null);
+			
+			objectIS.close(); //cerramos flujo
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
 		} catch (FileNotFoundException e) {
@@ -73,11 +77,16 @@ public class Profesores implements IProfesores {
 	private void escribir(){
 		File fileProfesores = new File(NOMBRE_FICHERO_PROFESORES); // creamos el fichero
 		
-		try (ObjectOutputStream fileOS = new ObjectOutputStream(new FileOutputStream(fileProfesores))) {// creamos el flujo y recorremos los profesores para ir copiandolas en el fichero
+		// creamos el flujo y recorremos los profesores para ir copiandolas en el fichero
+		try {
+			FileOutputStream fileOS = new FileOutputStream(fileProfesores); // creamos el flujo
+			ObjectOutputStream objectOS = new ObjectOutputStream(fileOS); // definimos que el tipo de dato va a ser objeto
+			
 			for (Profesor profesor : coleccionProfesores)
-				fileOS.writeObject(profesor);
+				objectOS.writeObject(profesor);
 			System.out.println("Fichero aulas escrito.");
-
+			
+			objectOS.close();//cerramos flujo
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
 		} catch (IOException e) {

@@ -50,13 +50,19 @@ public class Aulas implements IAulas {
 	private void leer(){
 		File fileAulas = new File(NOMBRE_FICHERO_AULAS); // creamos el fichero
 		
-		try (ObjectInputStream fileIS = new ObjectInputStream(new FileInputStream(fileAulas))) { // creamos el flujo y recorremos las aulas para ir copiandolas del fichero
+		// creamos el flujo y recorremos las aulas para ir copiandolas del fichero
+		try{ 
+			FileInputStream fileIS = new FileInputStream(fileAulas);// creamos el flujo
+		    ObjectInputStream objectIS = new ObjectInputStream(fileIS);// definimos que el tipo de dato va a ser objeto
+			
 			Aula aula = null;
 			do {
-				aula = (Aula) fileIS.readObject();
+				aula = (Aula) objectIS.readObject();
 				insertar(aula);
 
 			} while (aula != null);
+			
+			objectIS.close(); //cerramos flujo
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
 		} catch (FileNotFoundException e) {
@@ -73,11 +79,16 @@ public class Aulas implements IAulas {
 	private void escribir(){
 		File ficheroAulas = new File(NOMBRE_FICHERO_AULAS); // creamos el fichero
 		
-		try (ObjectOutputStream fileOS = new ObjectOutputStream(new FileOutputStream(ficheroAulas))) {// creamos el flujo y recorremos las aulas para ir copiandolas en el fichero
+		// creamos el flujo y recorremos las aulas para ir copiandolas en el fichero
+		try {
+			FileOutputStream fileOS = new FileOutputStream(ficheroAulas); // creamos el flujo
+	        ObjectOutputStream objectOS = new ObjectOutputStream(fileOS); // definimos que el tipo de dato va a ser objeto
+			
 			for (Aula aula : coleccionAulas)
-				fileOS.writeObject(aula);
+				objectOS.writeObject(aula);
 			System.out.println("Fichero aulas escrito.");
 
+			objectOS.close();//cerramos flujo
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
 		} catch (IOException e) {
