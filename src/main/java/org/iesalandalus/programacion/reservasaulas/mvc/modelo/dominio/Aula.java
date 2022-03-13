@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("serial")
 public class Aula implements Serializable{ // implementamos la clase serializable para poder leer y escribir el objeto en ficheros
 	private static final float PUNTOS_POR_PUESTO = 0.5f;
 	private static final int MAX_PUESTOS = 100, MIN_PUESTOS = 10;

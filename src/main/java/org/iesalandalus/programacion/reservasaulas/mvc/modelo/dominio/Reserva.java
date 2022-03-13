@@ -3,7 +3,6 @@ package org.iesalandalus.programacion.reservasaulas.mvc.modelo.dominio;
 import java.io.Serializable;
 import java.util.Objects;
 
-@SuppressWarnings("serial")
 public class Reserva implements Serializable{ // implementamos la clase serializable para poder leer y escribir el objeto en ficheros
 	private Permanencia permanencia;
 	private Aula aula;
