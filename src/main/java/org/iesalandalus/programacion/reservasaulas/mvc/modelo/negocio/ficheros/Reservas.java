@@ -1,5 +1,12 @@
 package org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.ficheros;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +29,11 @@ public class Reservas implements IReservas {
 	private static final float MAX_PUNTOS_PROFESOR_MES = 200;
 
 	private List<Reserva> coleccionReservas;
+	private File file = new File(".\\Reservas.txt");
+	private FileOutputStream fileOS;
+	private ObjectOutputStream objectOS;
+	private FileInputStream fileIS;
+	private ObjectInputStream objectIS;
 	
 	public Reservas () {
 		coleccionReservas = new ArrayList<Reserva>();
@@ -35,6 +47,38 @@ public class Reservas implements IReservas {
 			coleccionReservas = new ArrayList<Reserva>();
 		else 
 			setReservas(reservasOriginal);
+	}
+	
+	public void comenzar() throws FileNotFoundException, ClassNotFoundException, OperationNotSupportedException, IOException {
+		leer();
+	}
+	
+	public void terminar() throws FileNotFoundException, IOException {
+		escribir();
+	}
+	
+	private void leer() throws FileNotFoundException, IOException, ClassNotFoundException, OperationNotSupportedException{
+		fileIS = new FileInputStream(file);
+		objectIS = new ObjectInputStream(fileIS);
+		
+		Reserva reserva = null;
+		do {
+			reserva = (Reserva) objectIS.readObject();
+			insertar(reserva);
+
+		} while (reserva != null);
+		
+		fileIS.close();
+	}
+	
+	private void escribir() throws FileNotFoundException, IOException {
+		fileOS = new FileOutputStream(file);
+		objectOS = new ObjectOutputStream(fileOS);
+		
+		for (Reserva reserva : getReservas())
+			objectOS.writeObject(reserva);
+		
+		fileOS.close();
 	}
 	
 	private void setReservas(IReservas reservas) {

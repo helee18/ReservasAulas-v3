@@ -1,5 +1,12 @@
 package org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.ficheros;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,9 +21,15 @@ import org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.IAulas;
 public class Aulas implements IAulas {
 	
 	private List<Aula> coleccionAulas;
+	private File file = new File(".\\Aulas.txt");
+	private FileOutputStream fileOS;
+	private ObjectOutputStream objectOS;
+	private FileInputStream fileIS;
+	private ObjectInputStream objectIS;
 	
 	public Aulas () {
 		coleccionAulas = new ArrayList<Aula>();
+		
 	}
 	
 	public Aulas(IAulas aulasOriginal) {
@@ -27,6 +40,38 @@ public class Aulas implements IAulas {
 			coleccionAulas = new ArrayList<Aula>();
 		else 
 			setAulas(aulasOriginal);
+	}
+	
+	public void comenzar() throws FileNotFoundException, ClassNotFoundException, OperationNotSupportedException, IOException {
+		leer();
+	}
+	
+	public void terminar() throws FileNotFoundException, IOException {
+		escribir();
+	}
+	
+	private void leer() throws FileNotFoundException, IOException, ClassNotFoundException, OperationNotSupportedException{
+		fileIS = new FileInputStream(file);
+		objectIS = new ObjectInputStream(fileIS);
+		
+		Aula aula = null;
+		do {
+			aula = (Aula) objectIS.readObject();
+			insertar(aula);
+
+		} while (aula != null);
+		
+		fileIS.close();
+	}
+	
+	private void escribir() throws FileNotFoundException, IOException {
+		fileOS = new FileOutputStream(file);
+		objectOS = new ObjectOutputStream(fileOS);
+		
+		for (Aula aula : getAulas()) 
+			objectOS.writeObject(aula);
+		
+		fileOS.close();
 	}
 	
 	private void setAulas(IAulas aulas) {
