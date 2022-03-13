@@ -5,7 +5,6 @@ import org.iesalandalus.programacion.reservasaulas.mvc.modelo.FactoriaFuenteDato
 import org.iesalandalus.programacion.reservasaulas.mvc.modelo.IModelo;
 import org.iesalandalus.programacion.reservasaulas.mvc.modelo.Modelo;
 import org.iesalandalus.programacion.reservasaulas.mvc.vista.IVista;
-import org.iesalandalus.programacion.reservasaulas.mvc.vista.Opcion;
 import org.iesalandalus.programacion.reservasaulas.mvc.vista.Vista;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
@@ -21,10 +20,7 @@ public class MainApp {
 		// En este caso preguntamos si queremos los datos de memoria o de ficheros
 		int respuesta = 0;
 		do {
-			System.out.println("¿Que datos quieres? ");
-			for (FactoriaFuenteDatos opcion: FactoriaFuenteDatos.values()) {
-	            System.out.println(opcion); 
-			}
+			System.out.println("¿Que datos quieres? 0. Memoria, 1. Ficheros ");
 			respuesta = Entrada.entero();
 		} while (respuesta < 0 || respuesta > 1);
 		
