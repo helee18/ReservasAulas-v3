@@ -1,5 +1,6 @@
 package org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.ficheros;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,11 +22,7 @@ import org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.IAulas;
 public class Aulas implements IAulas {
 	
 	private List<Aula> coleccionAulas;
-	private File file = new File(".\\Aulas.txt");
-	private FileOutputStream fileOS;
-	private ObjectOutputStream objectOS;
-	private FileInputStream fileIS;
-	private ObjectInputStream objectIS;
+	private static final String NOMBRE_FICHERO_AULAS = ".\\Aulas.dat";
 	
 	public Aulas () {
 		coleccionAulas = new ArrayList<Aula>();
@@ -42,36 +39,50 @@ public class Aulas implements IAulas {
 			setAulas(aulasOriginal);
 	}
 	
-	public void comenzar() throws FileNotFoundException, ClassNotFoundException, OperationNotSupportedException, IOException {
+	public void comenzar(){
 		leer();
 	}
 	
-	public void terminar() throws FileNotFoundException, IOException {
+	public void terminar(){
 		escribir();
 	}
 	
-	private void leer() throws FileNotFoundException, IOException, ClassNotFoundException, OperationNotSupportedException{
-		fileIS = new FileInputStream(file);
-		objectIS = new ObjectInputStream(fileIS);
+	private void leer(){
+		File fileAulas = new File(NOMBRE_FICHERO_AULAS); // creamos el fichero
 		
-		Aula aula = null;
-		do {
-			aula = (Aula) objectIS.readObject();
-			insertar(aula);
+		try (ObjectInputStream fileIS = new ObjectInputStream(new FileInputStream(fileAulas))) { // creamos el flujo y recorremos las aulas para ir copiandolas del fichero
+			Aula aula = null;
+			do {
+				aula = (Aula) fileIS.readObject();
+				insertar(aula);
 
-		} while (aula != null);
-		
-		fileIS.close();
+			} while (aula != null);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+		} catch (EOFException e) {
+			System.out.println("Fichero aulas leído.");
+		} catch (IOException e) {
+			System.out.println("ERROR inesperado de Entrada/Salida.");
+		} catch (OperationNotSupportedException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
-	private void escribir() throws FileNotFoundException, IOException {
-		fileOS = new FileOutputStream(file);
-		objectOS = new ObjectOutputStream(fileOS);
+	private void escribir(){
+		File ficheroAulas = new File(NOMBRE_FICHERO_AULAS); // creamos el fichero
 		
-		for (Aula aula : getAulas()) 
-			objectOS.writeObject(aula);
-		
-		fileOS.close();
+		try (ObjectOutputStream fileOS = new ObjectOutputStream(new FileOutputStream(ficheroAulas))) {// creamos el flujo y recorremos las aulas para ir copiandolas en el fichero
+			for (Aula aula : coleccionAulas)
+				fileOS.writeObject(aula);
+			System.out.println("Fichero aulas escrito.");
+
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+		} catch (IOException e) {
+			System.out.println("ERROR inesperado de Entrada/Salida.");
+		}
 	}
 	
 	private void setAulas(IAulas aulas) {

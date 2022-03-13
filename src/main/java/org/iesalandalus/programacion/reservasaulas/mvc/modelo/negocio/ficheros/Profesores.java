@@ -1,5 +1,6 @@
 package org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.ficheros;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,17 +16,14 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.iesalandalus.programacion.reservasaulas.mvc.modelo.dominio.Aula;
 import org.iesalandalus.programacion.reservasaulas.mvc.modelo.dominio.Profesor;
 import org.iesalandalus.programacion.reservasaulas.mvc.modelo.negocio.IProfesores;
 
 public class Profesores implements IProfesores {
 	
 	private List<Profesor> coleccionProfesores;
-	private File file = new File(".\\Profesores.txt");
-	private FileOutputStream fileOS;
-	private ObjectOutputStream objectOS;
-	private FileInputStream fileIS;
-	private ObjectInputStream objectIS;
+	private static final String NOMBRE_FICHERO_PROFESORES = ".\\Profesores.dat";
 	
 	public Profesores () {
 		coleccionProfesores = new ArrayList<Profesor>();
@@ -41,36 +39,50 @@ public class Profesores implements IProfesores {
 			setProfesores(profesoresOriginal);
 	}
 	
-	public void comenzar() throws FileNotFoundException, ClassNotFoundException, OperationNotSupportedException, IOException {
+	public void comenzar(){
 		leer();
 	}
 	
-	public void terminar() throws FileNotFoundException, IOException {
+	public void terminar(){
 		escribir();
 	}
 	
-	private void leer() throws FileNotFoundException, IOException, ClassNotFoundException, OperationNotSupportedException{
-		fileIS = new FileInputStream(file);
-		objectIS = new ObjectInputStream(fileIS);
+	private void leer(){
+		File fileProfesores = new File(NOMBRE_FICHERO_PROFESORES); // creamos el fichero
 		
-		Profesor profesor = null;
-		do {
-			profesor = (Profesor) objectIS.readObject();
-			insertar(profesor);
+		try (ObjectInputStream fileIS = new ObjectInputStream(new FileInputStream(fileProfesores))) { // creamos el flujo y recorremos los profesores para ir copiandolas del fichero
+			Profesor profesor = null;
+			do {
+				profesor = (Profesor) fileIS.readObject();
+				insertar(profesor);
 
-		} while (profesor != null);
-		
-		fileIS.close();
+			} while (profesor != null);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ERROR: No puedo encontrar la clase que tengo que leer.");
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+		} catch (EOFException e) {
+			System.out.println("Fichero aulas leído.");
+		} catch (IOException e) {
+			System.out.println("ERROR inesperado de Entrada/Salida.");
+		} catch (OperationNotSupportedException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
-	private void escribir() throws FileNotFoundException, IOException {
-		fileOS = new FileOutputStream(file);
-		objectOS = new ObjectOutputStream(fileOS);
+	private void escribir(){
+		File fileProfesores = new File(NOMBRE_FICHERO_PROFESORES); // creamos el fichero
 		
-		for (Profesor profesor : getProfesores())
-			objectOS.writeObject(profesor);
-		
-		fileOS.close();
+		try (ObjectOutputStream fileOS = new ObjectOutputStream(new FileOutputStream(fileProfesores))) {// creamos el flujo y recorremos los profesores para ir copiandolas en el fichero
+			for (Profesor profesor : coleccionProfesores)
+				fileOS.writeObject(profesor);
+			System.out.println("Fichero aulas escrito.");
+
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: No puedo abrir el fichero de aulas.");
+		} catch (IOException e) {
+			System.out.println("ERROR inesperado de Entrada/Salida.");
+		}
 	}
 	
 	private void setProfesores(IProfesores profesores) {
