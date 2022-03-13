@@ -1,11 +1,13 @@
 package org.iesalandalus.programacion.reservasaulas.mvc.modelo.dominio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Profesor {
+@SuppressWarnings("serial")
+public class Profesor implements Serializable{ // implementamos la clase serializable para poder leer y escribir el objeto en ficheros
 	private static final String ER_TELEFONO="[69][0-9]{8}", ER_CORREO="\\w+[\\.\\w]*@\\w+[\\.\\w]*\\.\\w{2,5}\\b\\s?";
 	private String nombre, correo, telefono;
 	
